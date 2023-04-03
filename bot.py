@@ -3,7 +3,6 @@ import os
 from flask import Flask, request
 import openai
 import telegram
-from telegram import Update
 from telegram.ext import Dispatcher, MessageHandler, Filters, CommandHandler
 import json
 import requests
@@ -27,26 +26,41 @@ def webhook_handler():
         dispatcher.process_update(update)
     return 'ok'
 
-def reply_handler(bot, update):
-    response = openai.ChatCompletion.create(
+def private_chat(bot, update):
+    out = openai.ChatCompletion.create(
         model ="gpt-3.5-turbo",
         messages=[{"role": "user", "content": update.message.text}],
         max_tokens=256,
         temperature=0.7
         )
-    update.message.reply_text(response['choices'][0]['message']['content'].strip())
+    update.message.reply_text(out['choices'][0]['message']['content'].strip())
 
-#def fortune(update, context):
+def ai_chat(bot, update):
+    prompt_in = ' '.join(update.message.text)
+    out = openai.ChatCompletion.create(
+        model ="gpt-3.5-turbo",
+        messages=[{"role": "user", "content": prompt_in}],
+        max_tokens=256,
+        temperature=0.7
+    )
+    update.message.reply_text(out['choices'][0]['message']['content'].strip()+'\n')
+    bot.send_message(chat_id=update.message.chat_id, text=out['choices'][0]['message']['content'].strip())
+
 def fortune(bot, update):
-    response = requests.get("http://yerkee.com/api/fortune")
-    message = response.json()['fortune']
-    #message = googletrans.Translator().translate(response.json()['fortune'], dest='ko').text
-    #update.message.reply_text(message)
-    update.message.reply_text(message)
+    out = requests.get("http://yerkee.com/api/fortune")
+    update.message.reply_text(out.json()['fortune'].strip())
+    
+
+def fact(bot, update):
+    out = requests.get("https://uselessfacts.jsph.pl/api/v2/facts/random", params={"language": "en"})
+    update.message.reply_text(out.json()['text'].strip())
+
 
 dispatcher = Dispatcher(bot, None)
-dispatcher.add_handler(MessageHandler(Filters.text, reply_handler))
+#dispatcher.add_handler(MessageHandler(Filters.text, private_chat))
+dispatcher.add_handler(CommandHandler('a', ai_chat))
 dispatcher.add_handler(CommandHandler('fc', fortune))
+dispatcher.add_handler(CommandHandler('fact', fact))
 
 if __name__ == "__main__":
     # Running server
