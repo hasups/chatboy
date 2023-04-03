@@ -4,7 +4,7 @@ from flask import Flask, request
 import openai
 import telegram
 from telegram import Update
-from telegram.ext import Dispatcher, MessageHandler, Filters, CommandHandler, ContextTypes
+from telegram.ext import Dispatcher, MessageHandler, Filters, CommandHandler
 import json
 import requests
 
@@ -36,7 +36,7 @@ def reply_handler(bot, update):
         )
     update.message.reply_text(response['choices'][0]['message']['content'].strip())
 
-def fortune(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+def fortune(update, context):
     response = requests.get("http://yerkee.com/api/fortune")
     message = response.json()['fortune']
     # message = googletrans.Translator().translate(response.json()['fortune'], dest='ko').text
