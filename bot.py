@@ -2,7 +2,8 @@ import os
 from flask import Flask, request
 import openai
 import telegram
-from telegram.ext import Dispatcher, CommandHandler, MessageHandler, Filters
+from telegram import Dispatcher
+from telegram.ext import CommandHandler, MessageHandler, Filters
 import json
 import requests
 
