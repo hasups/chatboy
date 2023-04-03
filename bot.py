@@ -26,8 +26,8 @@ def webhook_handler():
         dispatcher.process_update(update)
     return 'ok'
 
-def bot_help(bot, update, args):
-    bot.send_message(chat_id=update.message.chat_id, text=' '.join(args))
+def bot_help(bot, update):
+    bot.send_message(chat_id=update.message.chat_id, text="/a, /image, /fact, /fc, /help")
 
 def bot_chat(bot, update):
     out = openai.ChatCompletion.create(
@@ -39,8 +39,7 @@ def bot_chat(bot, update):
     bot.send_message(chat_id=update.message.chat_id, text=out['choices'][0]['message']['content'].strip())
 
 def ai_chat(bot, update, args):
-    prompt_in = ' '.join(update.message.text)
-    # ' '.join(args)
+    prompt_in = ' '.join(args)
     out = openai.ChatCompletion.create(
         model ="gpt-3.5-turbo",
         messages=[{"role": "user", "content": prompt_in}],
@@ -48,6 +47,19 @@ def ai_chat(bot, update, args):
         temperature=0.7
     )
     bot.send_message(chat_id=update.message.chat_id, text=out['choices'][0]['message']['content'].strip())
+
+def ai_image(bot, update, args):
+    prompt_in = ' '.join(args)
+    #message = googletrans.Translator().translate(prompt_in, dest='en').text
+    out = openai.Image.create(
+      prompt = message,
+      n=1,
+      size="512x512",
+      response_format="url"
+    )
+    json_object = json.loads(str(out))
+    response = json_object['data'][0]['url']
+    bot.sendPhoto(chat_id=update.message.chat_id, photo=response)
 
 def fortune(bot, update):
     out = requests.get("http://yerkee.com/api/fortune")
@@ -59,11 +71,13 @@ def fact(bot, update):
 
 
 dispatcher = Dispatcher(bot, None)
-dispatcher.add_handler(CommandHandler('help', bot_help, pass_args=True))
+dispatcher.add_handler(CommandHandler('help', bot_help))
 #dispatcher.add_handler(MessageHandler(Filters.text, bot_chat))
-dispatcher.add_handler(CommandHandler('a', ai_chat, pass_args=True))
+dispatcher.add_handler(CommandHandler('ai', ai_chat, pass_args=True))
+dispatcher.add_handler(CommandHandler('image', ai_image, pass_args=True))
 dispatcher.add_handler(CommandHandler('fc', fortune))
 dispatcher.add_handler(CommandHandler('fact', fact))
+
 
 if __name__ == "__main__":
     # Running server
