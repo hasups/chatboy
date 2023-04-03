@@ -27,7 +27,7 @@ def webhook_handler():
     return 'ok'
 
 def bot_help(bot, update):
-    bot.send_message(chat_id=update.message.chat_id, text="/a, /image, /fact, /fc, /help")
+    bot.send_message(chat_id=update.message.chat_id, text="/ai, /image, /fact, /fc, /help")
 
 def bot_chat(bot, update):
     out = openai.ChatCompletion.create(
@@ -52,7 +52,7 @@ def ai_image(bot, update, args):
     prompt_in = ' '.join(args)
     #message = googletrans.Translator().translate(prompt_in, dest='en').text
     out = openai.Image.create(
-      prompt = message,
+      prompt = prompt_in,
       n=1,
       size="512x512",
       response_format="url"
