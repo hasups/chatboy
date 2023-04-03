@@ -3,7 +3,9 @@ import os
 from flask import Flask, request
 import openai
 import telegram
-from telegram.ext import Dispatcher, MessageHandler, Filters
+from telegram.ext import Dispatcher, MessageHandler, Filters, CommandHandler, ContextTypes
+import json
+import requests
 
 openai.api_key = os.getenv("OPENAI_API_KEY")
 telegram_bot_token = str(os.getenv("TELEGRAM_BOT_TOKEN"))
@@ -33,8 +35,15 @@ def reply_handler(bot, update):
         )
     update.message.reply_text(response['choices'][0]['message']['content'].strip())
 
+def fortune(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    response = requests.get("http://yerkee.com/api/fortune")
+    message = response.json()['fortune']
+    # message = googletrans.Translator().translate(response.json()['fortune'], dest='ko').text
+    context.bot.send_message(chat_id=update.effective_chat.id, text=message)
+
 dispatcher = Dispatcher(bot, None)
 dispatcher.add_handler(MessageHandler(Filters.text, reply_handler))
+dispatcher.add_handler(CommandHandler('fc', fortune))
 
 if __name__ == "__main__":
     # Running server
