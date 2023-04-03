@@ -40,7 +40,7 @@ def fortune(update, context):
     response = requests.get("http://yerkee.com/api/fortune")
     message = response.json()['fortune']
     # message = googletrans.Translator().translate(response.json()['fortune'], dest='ko').text
-    context.bot.send_message(chat_id=update.effective_chat.id, text=message)
+    update.message.reply_text(message)
 
 dispatcher = Dispatcher(bot, None)
 dispatcher.add_handler(MessageHandler(Filters.text, reply_handler))
