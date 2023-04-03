@@ -3,7 +3,7 @@ from flask import Flask, request
 import openai
 import telegram
 #from telegram import Dispatcher
-from telegram.ext import CommandHandler, MessageHandler, Filters
+from telegram.ext import CommandHandler, MessageHandler, filters
 import json
 import requests
 
