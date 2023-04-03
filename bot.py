@@ -26,40 +26,42 @@ def webhook_handler():
         dispatcher.process_update(update)
     return 'ok'
 
-def private_chat(bot, update):
+def bot_help(bot, update, args):
+    bot.send_message(chat_id=update.message.chat_id, text=' '.join(args))
+
+def bot_chat(bot, update):
     out = openai.ChatCompletion.create(
         model ="gpt-3.5-turbo",
         messages=[{"role": "user", "content": update.message.text}],
         max_tokens=256,
         temperature=0.7
         )
-    update.message.reply_text(out['choices'][0]['message']['content'].strip())
+    bot.send_message(chat_id=update.message.chat_id, text=out['choices'][0]['message']['content'].strip())
 
-def ai_chat(bot, update):
+def ai_chat(bot, update, args):
     prompt_in = ' '.join(update.message.text)
+    # ' '.join(args)
     out = openai.ChatCompletion.create(
         model ="gpt-3.5-turbo",
         messages=[{"role": "user", "content": prompt_in}],
         max_tokens=256,
         temperature=0.7
     )
-    #update.message.reply_text(out['choices'][0]['message']['content'].strip())
     bot.send_message(chat_id=update.message.chat_id, text=out['choices'][0]['message']['content'].strip())
 
 def fortune(bot, update):
     out = requests.get("http://yerkee.com/api/fortune")
-    update.message.reply_text(out.json()['fortune'].strip())
-    
+    bot.send_message(chat_id=update.message.chat_id, text=out.json()['fortune'].strip())
 
 def fact(bot, update):
     out = requests.get("https://uselessfacts.jsph.pl/api/v2/facts/random", params={"language": "en"})
-    update.message.reply_text(out.json()['text'].strip())
-    bot.send_message(chat_id=update.message.chat_id, text="$$$$")
+    bot.send_message(chat_id=update.message.chat_id, text=out.json()['text'].strip())
 
 
 dispatcher = Dispatcher(bot, None)
-#dispatcher.add_handler(MessageHandler(Filters.text, private_chat))
-dispatcher.add_handler(CommandHandler('a', ai_chat))
+dispatcher.add_handler(CommandHandler('help', bot_help, pass_args=True))
+#dispatcher.add_handler(MessageHandler(Filters.text, bot_chat))
+dispatcher.add_handler(CommandHandler('a', ai_chat, pass_args=True))
 dispatcher.add_handler(CommandHandler('fc', fortune))
 dispatcher.add_handler(CommandHandler('fact', fact))
 
