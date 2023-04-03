@@ -43,8 +43,9 @@ def ai_chat(bot, update):
         max_tokens=256,
         temperature=0.7
     )
-    update.message.reply_text(out['choices'][0]['message']['content'].strip()+'\n')
-    bot.send_message(chat_id=update.message.chat_id, text=out['choices'][0]['message']['content'].strip())
+    update.message.reply_text(out['choices'][0]['message']['content'].strip())
+    #bot.send_message(chat_id=update.message.chat_id, text=out['choices'][0]['message']['content'].strip())
+    bot.send_message(chat_id=update.message.chat_id, text="####")
 
 def fortune(bot, update):
     out = requests.get("http://yerkee.com/api/fortune")
