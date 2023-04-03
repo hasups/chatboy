@@ -45,7 +45,6 @@ def ai_chat(bot, update):
     )
     #update.message.reply_text(out['choices'][0]['message']['content'].strip())
     bot.send_message(chat_id=update.message.chat_id, text=out['choices'][0]['message']['content'].strip())
-    #bot.send_message(chat_id=update.message.chat_id, text="####")
 
 def fortune(bot, update):
     out = requests.get("http://yerkee.com/api/fortune")
@@ -55,6 +54,7 @@ def fortune(bot, update):
 def fact(bot, update):
     out = requests.get("https://uselessfacts.jsph.pl/api/v2/facts/random", params={"language": "en"})
     update.message.reply_text(out.json()['text'].strip())
+    bot.send_message(chat_id=update.message.chat_id, text="$$$$")
 
 
 dispatcher = Dispatcher(bot, None)
