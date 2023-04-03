@@ -61,12 +61,12 @@ def ai_image(bot, update, args):
     json_object = json.loads(str(out))
     bot.sendPhoto(chat_id=update.message.chat_id, photo=json_object['data'][0]['url'])
 
-
+'''
 def bot_trans(bot, update, args):
     prompt_in = ' '.join(args[1:])
     message = googletrans.Translator().translate(prompt_in, dest=args[0]).text.strip()
     bot.send_message(chat_id=update.message.chat_id, text=message)
-
+'''
 
 def fortune(bot, update):
     out = requests.get("http://yerkee.com/api/fortune")
@@ -83,7 +83,7 @@ dispatcher = Dispatcher(bot, None)
 dispatcher.add_handler(CommandHandler('help', bot_help))
 dispatcher.add_handler(CommandHandler('ai', ai_chat, pass_args=True))
 dispatcher.add_handler(CommandHandler('image', ai_image, pass_args=True))
-dispatcher.add_handler(CommandHandler('tr', bot_trans, pass_args=True))
+#dispatcher.add_handler(CommandHandler('tr', bot_trans, pass_args=True))
 dispatcher.add_handler(CommandHandler('fc', fortune))
 dispatcher.add_handler(CommandHandler('fact', fact))
 
