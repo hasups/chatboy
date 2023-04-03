@@ -2,7 +2,7 @@ import os
 from flask import Flask, request
 import openai
 import telegram
-from telegram.ext import Dispatcher, CommandHandler, MessageHandler, Filters
+from telegram.ext import CommandHandler, MessageHandler, Filters
 import json
 import requests
 
@@ -50,7 +50,6 @@ def ai_chat(bot, update, args):
 
 def ai_image(bot, update, args):
     prompt_in = ' '.join(args)
-    #message = googletrans.Translator().translate(prompt_in, dest='en').text
     out = openai.Image.create(
       prompt = prompt_in,
       n=1,
@@ -78,7 +77,7 @@ def fact(bot, update):
     bot.send_message(chat_id=update.message.chat_id, text=out.json()['text'].strip())
 
 
-dispatcher = Dispatcher(bot, None)
+dispatcher = telegram.Dispatcher(bot, None)
 #dispatcher.add_handler(MessageHandler(Filters.text, bot_chat))
 dispatcher.add_handler(CommandHandler('help', bot_help))
 dispatcher.add_handler(CommandHandler('ai', ai_chat, pass_args=True))
