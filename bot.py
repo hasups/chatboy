@@ -2,7 +2,7 @@ import os
 from flask import Flask, request
 import openai
 import telegram
-from telegram.ext import Dispatcher, MessageHandler, Filters, CommandHandler
+from telegram.ext import Dispatcher, CommandHandler, MessageHandler, Filters
 import json
 import requests
 
@@ -64,8 +64,8 @@ def ai_image(bot, update, args):
 def bot_trans(bot, update, args):
     prompt_in = ' '.join(args[1:])
     #message = googletrans.Translator().translate(prompt_in, dest=args[0]).text.strip()
-    message = prompt_in
-    bot.send_message(chat_id=update.message.chat_id, text=message)
+    #bot.send_message(chat_id=update.message.chat_id, text=message)
+    bot.send_message(chat_id=update.message.chat_id, text="under construction")
 
 
 def fortune(bot, update):
