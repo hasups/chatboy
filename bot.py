@@ -38,7 +38,7 @@ def bot_chat(bot, update):
 
 
 def bot_help(bot, update):
-    bot.send_message(chat_id=update.message.chat_id, text="/ai, /image, /tr, /fact, /fc, /help")
+    bot.send_message(chat_id=update.message.chat_id, text="/ai, /image, /fact, /fc, /help")
 
 
 def ai_chat(bot, update, args):
@@ -61,7 +61,7 @@ def ai_image(bot, update, args):
       response_format="url"
     )
     json_object = json.loads(str(out))
-    bot.sendPhoto(chat_id=update.message.chat_id, photo=json_object['data'][0]['url'])
+    bot.send_photo(chat_id=update.message.chat_id, photo=json_object['data'][0]['url'])
 
 """
 def bot_trans(bot, update, args):
@@ -85,7 +85,7 @@ dispatcher = Dispatcher(bot, None)
 #dispatcher.add_handler(MessageHandler(Filters.text, bot_chat))
 dispatcher.add_handler(CommandHandler('help', bot_help))
 dispatcher.add_handler(CommandHandler('ai', ai_chat, pass_args=True))
-#dispatcher.add_handler(CommandHandler('image', ai_image, pass_args=True))
+dispatcher.add_handler(CommandHandler('image', ai_image, pass_args=True))
 #dispatcher.add_handler(CommandHandler('tr', bot_trans, pass_args=True))
 dispatcher.add_handler(CommandHandler('fc', fortune))
 dispatcher.add_handler(CommandHandler('fact', fact))
