@@ -36,10 +36,12 @@ def reply_handler(bot, update):
         )
     update.message.reply_text(response['choices'][0]['message']['content'].strip())
 
-def fortune(update, context):
+#def fortune(update, context):
+def fortune(bot, update):
     response = requests.get("http://yerkee.com/api/fortune")
     message = response.json()['fortune']
-    # message = googletrans.Translator().translate(response.json()['fortune'], dest='ko').text
+    #message = googletrans.Translator().translate(response.json()['fortune'], dest='ko').text
+    #update.message.reply_text(message)
     update.message.reply_text(message)
 
 dispatcher = Dispatcher(bot, None)
