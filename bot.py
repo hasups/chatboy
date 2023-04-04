@@ -59,7 +59,6 @@ def ai_chat(bot, update, args):
 def ai_image(bot, update, args):
     prompt_in = ' '.join(args)
     message = lt.translate(prompt_in, lt.detect(prompt_in)[0]['language'], 'en')
-    bot.send_message(chat_id=update.message.chat_id, text=message)
     out = openai.Image.create(
       prompt = message,
       n=1,
@@ -67,7 +66,7 @@ def ai_image(bot, update, args):
       response_format="url"
     )
     json_object = json.loads(str(out))
-    bot.send_photo(chat_id=update.message.chat_id, photo=json_object['data'][0]['url'])
+    bot.send_photo(chat_id=update.message.chat_id, photo=json_object['data'][0]['url'], caption=message)
 
 
 def bot_trans(bot, update, args):
