@@ -1,3 +1,5 @@
+#by hasups@gmail.com 2023.04.04
+
 import logging
 import os
 from flask import Flask, request
@@ -8,19 +10,15 @@ import json
 import requests
 from libretranslatepy import LibreTranslateAPI
 
-
 openai.api_key = os.getenv("OPENAI_API_KEY")
 telegram_bot_token = str(os.getenv("TELEGRAM_BOT_TOKEN"))
 
 logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO)
 logger = logging.getLogger(__name__)
 
+
+
 app = Flask(__name__)
-
-bot = telegram.Bot(token=telegram_bot_token)
-
-lt = LibreTranslateAPI("https://translate.argosopentech.com/")
-
 
 # Set route /callback with POST method will trigger this method.
 @app.route('/callback', methods=['POST'])
@@ -30,6 +28,10 @@ def webhook_handler():
         dispatcher.process_update(update)
     return 'ok'
 
+
+
+bot = telegram.Bot(token=telegram_bot_token)
+lt = LibreTranslateAPI("https://translate.argosopentech.com/")
 
 def bot_chat(bot, update):
     out = openai.ChatCompletion.create(
@@ -42,7 +44,7 @@ def bot_chat(bot, update):
 
 
 def bot_help(bot, update):
-    bot.send_message(chat_id=update.message.chat_id, text="/ai, /image, /tr en|ko, /fact, /fc, /help")
+    bot.send_message(chat_id=update.message.chat_id, text="/ai, /image, /tr, /fact, /fc, /help")
 
 
 def ai_chat(bot, update, args):
@@ -70,10 +72,12 @@ def ai_image(bot, update, args):
 
 
 def bot_trans(bot, update, args):
-    prompt_in = ' '.join(args[1:])
-    #message = googletrans.Translator().translate(prompt_in, dest=args[0]).text.strip()
-    message = lt.translate(prompt_in, lt.detect(prompt_in)[0]['language'], args[0])
-    bot.send_message(chat_id=update.message.chat_id, text=message)
+    if len(args)==0:
+        bot.send_message(chat_id=update.message.chat_id, text="/tr ko|en|vi|jp|zh|... text...")
+    else:
+        prompt_in = ' '.join(args[1:])
+        message = lt.translate(prompt_in, lt.detect(prompt_in)[0]['language'], args[0])
+        bot.send_message(chat_id=update.message.chat_id, text=message)
 
 
 def fortune(bot, update):
