@@ -38,7 +38,7 @@ def bot_chat(bot, update):
 
 
 def bot_help(bot, update):
-    bot.send_message(chat_id=update.message.chat_id, text="/ai, /image, /fact, /fc, /help")
+    bot.send_message(chat_id=update.message.chat_id, text="/ai, /image, /tr en|ko, /fact, /fc, /help")
 
 
 def ai_chat(bot, update, args):
