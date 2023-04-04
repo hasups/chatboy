@@ -6,6 +6,7 @@ import telegram
 from telegram.ext import Dispatcher, MessageHandler, Filters, CommandHandler
 import json
 import requests
+from libretranslatepy import LibreTranslateAPI
 
 
 openai.api_key = os.getenv("OPENAI_API_KEY")
@@ -17,6 +18,7 @@ logger = logging.getLogger(__name__)
 app = Flask(__name__)
 
 bot = telegram.Bot(token=telegram_bot_token)
+
 
 # Set route /callback with POST method will trigger this method.
 @app.route('/callback', methods=['POST'])
@@ -54,8 +56,11 @@ def ai_chat(bot, update, args):
 
 def ai_image(bot, update, args):
     prompt_in = ' '.join(args)
+    lt = LibreTranslateAPI("https://translate.argosopentech.com/")
+    message = lt.translate(prompt_in, lt.detect(prompt_in)[0]['language'], 'en')
+    bot.send_message(chat_id=update.message.chat_id, text=message)
     out = openai.Image.create(
-      prompt = prompt_in,
+      prompt = message,
       n=1,
       size="512x512",
       response_format="url"
@@ -63,22 +68,23 @@ def ai_image(bot, update, args):
     json_object = json.loads(str(out))
     bot.send_photo(chat_id=update.message.chat_id, photo=json_object['data'][0]['url'])
 
-"""
+
 def bot_trans(bot, update, args):
     prompt_in = ' '.join(args[1:])
-    message = googletrans.Translator().translate(prompt_in, dest=args[0]).text.strip()
+    #message = googletrans.Translator().translate(prompt_in, dest=args[0]).text.strip()
+    lt = LibreTranslateAPI("https://translate.argosopentech.com/")
+    message = lt.translate(prompt_in, lt.detect(prompt_in)[0]['language'], args[0])
     bot.send_message(chat_id=update.message.chat_id, text=message)
-    bot.send_message(chat_id=update.message.chat_id, text="under construction")
-"""
+
 
 def fortune(bot, update):
     out = requests.get("http://yerkee.com/api/fortune")
-    bot.send_message(chat_id=update.message.chat_id, text=out.json()['fortune'].strip())
+    bot.send_message(chat_id=update.message.chat_id, text=out.json()['fortune'])
 
 
 def fact(bot, update):
     out = requests.get("https://uselessfacts.jsph.pl/api/v2/facts/random", params={"language": "en"})
-    bot.send_message(chat_id=update.message.chat_id, text=out.json()['text'].strip())
+    bot.send_message(chat_id=update.message.chat_id, text=out.json()['text'])
 
 
 dispatcher = Dispatcher(bot, None)
