@@ -5,6 +5,11 @@ gpt-3.5-turbo [python-telegram-bot](https://docs.python-telegram-bot.org/en/stab
 - OPENAI_API_KEY
 - TELEGRAM_BOT_TOKEN
 
+# webhook setup
+'''
+https://api.telegram.org/bot{TELEGRAM_BOT_TOKEN}/setWebhook?url=https://{YOUR_DOMAIN}.vercel.app/callback
+'''
+
 # services
 - /ai
   - [gpt-3.5-turbo](https://platform.openai.com/docs/models/gpt-3-5)
