@@ -40,7 +40,7 @@ def bot_chat(bot, update):
         max_tokens=256,
         temperature=0.7
         )
-    bot.send_message(chat_id=update.message.chat_id, text=out['choices'][0]['message']['content'].strip())
+    update.message.reply_text(out['choices'][0]['message']['content'].strip())
 
 
 def bot_help(bot, update):
