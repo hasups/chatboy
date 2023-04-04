@@ -6,9 +6,7 @@ gpt-3.5-turbo [python-telegram-bot](https://docs.python-telegram-bot.org/en/stab
 - TELEGRAM_BOT_TOKEN
 
 # webhook setup
-'''
 https://api.telegram.org/bot{TELEGRAM_BOT_TOKEN}/setWebhook?url=https://{YOUR_DOMAIN}.vercel.app/callback
-'''
 
 # services
 - /ai
