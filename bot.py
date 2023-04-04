@@ -19,6 +19,8 @@ app = Flask(__name__)
 
 bot = telegram.Bot(token=telegram_bot_token)
 
+lt = LibreTranslateAPI("https://translate.argosopentech.com/")
+
 
 # Set route /callback with POST method will trigger this method.
 @app.route('/callback', methods=['POST'])
@@ -56,7 +58,6 @@ def ai_chat(bot, update, args):
 
 def ai_image(bot, update, args):
     prompt_in = ' '.join(args)
-    lt = LibreTranslateAPI("https://translate.argosopentech.com/")
     message = lt.translate(prompt_in, lt.detect(prompt_in)[0]['language'], 'en')
     bot.send_message(chat_id=update.message.chat_id, text=message)
     out = openai.Image.create(
@@ -72,9 +73,7 @@ def ai_image(bot, update, args):
 def bot_trans(bot, update, args):
     prompt_in = ' '.join(args[1:])
     #message = googletrans.Translator().translate(prompt_in, dest=args[0]).text.strip()
-    lt = LibreTranslateAPI("https://translate.argosopentech.com/")
     message = lt.translate(prompt_in, lt.detect(prompt_in)[0]['language'], args[0])
-    bot.send_message(chat_id=update.message.chat_id, text='***' + prompt_in + '***' + lt.detect(prompt_in)[0]['language'] + '***')
     bot.send_message(chat_id=update.message.chat_id, text=message)
 
 
@@ -93,7 +92,7 @@ dispatcher = Dispatcher(bot, None)
 dispatcher.add_handler(CommandHandler('help', bot_help))
 dispatcher.add_handler(CommandHandler('ai', ai_chat, pass_args=True))
 dispatcher.add_handler(CommandHandler('image', ai_image, pass_args=True))
-#dispatcher.add_handler(CommandHandler('tr', bot_trans, pass_args=True))
+dispatcher.add_handler(CommandHandler('tr', bot_trans, pass_args=True))
 dispatcher.add_handler(CommandHandler('fc', fortune))
 dispatcher.add_handler(CommandHandler('fact', fact))
 
