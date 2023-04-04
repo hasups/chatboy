@@ -74,6 +74,7 @@ def bot_trans(bot, update, args):
     #message = googletrans.Translator().translate(prompt_in, dest=args[0]).text.strip()
     lt = LibreTranslateAPI("https://translate.argosopentech.com/")
     message = lt.translate(prompt_in, lt.detect(prompt_in)[0]['language'], args[0])
+    bot.send_message(chat_id=update.message.chat_id, text='***' + prompt_in + '***' + lt.detect(prompt_in)[0]['language'] + '***')
     bot.send_message(chat_id=update.message.chat_id, text=message)
 
 
