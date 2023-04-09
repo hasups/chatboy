@@ -1,5 +1,5 @@
 # chatboy
-gpt-3.5-turbo [python-telegram-bot](https://docs.python-telegram-bot.org/en/stable/) on [Vercel](https://vercel.com/dashboard)
+gpt-3.5-turbo [python-telegram-bot](https://docs.python-telegram-bot.org/en/stable/) (in a group chat room) on [Vercel](https://vercel.com/dashboard)
 
 # environment variables
 - OPENAI_API_KEY
